@@ -35,7 +35,7 @@ class PostsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return $id;
     }
 
     /**
