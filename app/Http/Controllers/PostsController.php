@@ -15,7 +15,7 @@ class PostsController extends Controller
         $posts = DB::table('posts')
             ->avg('min_to_read');
 
-        dd($posts);
+        // dd($posts);
 
         return view('blog.index');
     }
