@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+
+    // protected $table = 'posts';
+
+    // protected $primaryKey = 'title';
+
+    // protected $timestamps = false;
+
+    // protected $dateTime = 'U';
+
+    // protected $connection = 'sqlite';
+
+    // protected $attributes = [
+    //     'is_publish' => true
+    // ];
 }
