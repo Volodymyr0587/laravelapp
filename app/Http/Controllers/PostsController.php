@@ -35,7 +35,7 @@ class PostsController extends Controller
             'title' => 'required|unique:posts|max:255',
             'excerpt' => 'required',
             'body' => 'required',
-            'image' => ['required', 'mimes:jpg,png,jpeg', 'max:5048'],
+            'image_path' => ['nullable', 'mimes:jpg,png,jpeg', 'max:5048'],
             'min_to_read' => 'min:0|max:60'
         ]);
 
@@ -48,7 +48,7 @@ class PostsController extends Controller
             'min_to_read' => $request->min_to_read
         ]);
 
-        return redirect(route('blog.index'))->with('message', 'Post Created Successfully.');
+        return redirect(route('blog.index'));
     }
 
     /**
@@ -66,7 +66,9 @@ class PostsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('blog.edit', [
+            'post' => Post::where('id', $id)->first()
+        ]);
     }
 
     /**
@@ -74,7 +76,21 @@ class PostsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|unique:posts,title,' . $id,
+            'excerpt' => 'required',
+            'body' => 'required',
+            'image_path' => ['mimes:jpg,png,jpeg', 'max:5048'],
+            'min_to_read' => 'min:0|max:60'
+        ]);
+
+        Post::where('id', $id)->update(
+            $request->is_published === 'on'
+                ? array_replace($request->except('_token', '_method'), ['is_published' => true])
+                : array_replace($request->except('_token', '_method'), ['is_published' => false])
+        );
+
+        return redirect(route('blog.index'));
     }
 
     /**
@@ -87,9 +103,11 @@ class PostsController extends Controller
 
     private function storeImage(Request $request)
     {
-        $newImageName = uniqid() . '-' . $request->title . '.' . $request->image->extension();
-        $newImageName = preg_replace('/[[:space:]]+/', '-', $newImageName);
+        if ($request->image) {
+            $newImageName = uniqid() . '-' . $request->title . '.' . $request->image->extension();
+            $newImageName = preg_replace('/[[:space:]]+/', '-', $newImageName);
 
-        return $request->image->move(public_path('images'), $newImageName);
+            return $request->image->move(public_path('images'), $newImageName);
+        }
     }
 }
