@@ -13,7 +13,6 @@
 </head>
 
 <body class="w-full h-full bg-gray-100">
-
     @if (session()->has('success'))
         <div x-data="{ show: true }"
              x-init="setTimeout(() => show = false, 4000)"
@@ -109,6 +108,10 @@
             </div>
         </div>
     @endforeach
+
+    <div class="mx-auto pb-10 w-4/5">
+        {{ $posts->links() }}
+    </div>
 </body>
 
 </html>
