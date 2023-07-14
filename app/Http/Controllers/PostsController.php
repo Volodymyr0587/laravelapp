@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostFormRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,15 +30,9 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostFormRequest $request)
     {
-        $request->validate([
-            'title' => 'required|unique:posts|max:255',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'image_path' => ['nullable', 'mimes:jpg,png,jpeg', 'max:5048'],
-            'min_to_read' => 'min:0|max:60'
-        ]);
+        $request->validated();
 
         Post::create([
             'title' => $request->title,
@@ -76,21 +71,17 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostFormRequest $request, string $id)
     {
-        $request->validate([
-            'title' => 'required|max:255|unique:posts,title,' . $id,
-            'excerpt' => 'required',
-            'body' => 'required',
-            'image_path' => ['mimes:jpg,png,jpeg', 'max:5048'],
-            'min_to_read' => 'min:0|max:60'
-        ]);
+        $request->validated();
 
         Post::where('id', $id)->update(
             $request->is_published === 'on'
                 ? array_replace($request->except('_token', '_method'), ['is_published' => true])
                 : array_replace($request->except('_token', '_method'), ['is_published' => false])
         );
+
+        session()->flash('update-post', 'Post has been updated.');
 
         return redirect(route('blog.index'));
     }

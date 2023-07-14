@@ -23,6 +23,15 @@
         </div>
     @endif
 
+    @if (session()->has('update-post'))
+        <div x-data="{ show: true }"
+             x-init="setTimeout(() => show = false, 4000)"
+             x-show="show"
+            class="fixed bg-green-500 py-2 px-4 rounded-full top-3 left-3 text-base sm:text-xl">
+            <p>{{ session('update-post') }}</p>
+        </div>
+    @endif
+
     <div class="w-4/5 mx-auto">
         <div class="text-center pt-20">
             <h1 class="text-3xl text-gray-700">
