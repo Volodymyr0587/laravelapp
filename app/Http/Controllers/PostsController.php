@@ -84,18 +84,11 @@ class PostsController extends Controller
     {
         $request->validated();
 
-        $post = Post::where('id', $id)->update(
+        Post::where('id', $id)->update(
             $request->is_published === 'on'
                 ? array_replace($request->except('_token', '_method'), ['is_published' => true])
                 : array_replace($request->except('_token', '_method'), ['is_published' => false])
         );
-
-        $post->meta()->update([
-            'post_id' => $post->id,
-            'meta_description' => $request->meta_description,
-            'meta_keywords' => $request->meta_keywords,
-            'meta_robots' => $request->meta_robots
-        ]);
 
         session()->flash('update-post', 'Post has been updated.');
 
