@@ -100,7 +100,11 @@ class PostsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Post::destroy($id);
+
+        session()->flash('delete-post', 'Post has been deleted.');
+
+        return redirect(route('blog.index')); //->with('message', 'Post has been deleted.');
     }
 
     private function storeImage(Request $request)
