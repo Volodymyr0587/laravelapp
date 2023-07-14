@@ -48,6 +48,8 @@ class PostsController extends Controller
             'min_to_read' => $request->min_to_read
         ]);
 
+        session()->flash('success', 'Post Created Successfully!');
+
         return redirect(route('blog.index'));
     }
 
