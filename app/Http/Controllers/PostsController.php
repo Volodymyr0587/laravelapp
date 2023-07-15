@@ -90,6 +90,11 @@ class PostsController extends Controller
                 : array_replace($request->except('_token', '_method'), ['is_published' => false])
         );
 
+        // $post->meta_keywords = $request->get('meta_keywords');
+        // $post->meta_description = $request->get('meta_description');
+        // $post->meta_robots = $request->get('meta_robots');
+        // $post->update();
+
         session()->flash('update-post', 'Post has been updated.');
 
         return redirect(route('blog.index'));
@@ -107,7 +112,7 @@ class PostsController extends Controller
         return redirect(route('blog.index')); //->with('message', 'Post has been deleted.');
     }
 
-    private function storeImage(Request $request)
+    private function storeImage(PostFormRequest $request)
     {
         if ($request->image) {
             $newImageName = uniqid() . '-' . $request->title . '.' . $request->image->extension();
